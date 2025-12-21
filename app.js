@@ -27,18 +27,23 @@ function renderEntries(entries) {
     const shuffledImages = [...entry.images];
     shuffle(shuffledImages);
 
-    // Show only the first image initially
-    const firstImageId = shuffledImages[0];
-    const mainImg = document.createElement("img");
-    mainImg.src = DRIVE_THUMB_PREFIX + firstImageId + DRIVE_THUMB_SUFFIX;
-    mainImg.loading = "lazy";
-    mainImg.className = "main-thumbnail";
-    mainImg.style.cursor = "pointer";
-    mainImg.style.maxWidth = "300px";
-    mainImg.style.maxHeight = "300px";
-    mainImg.style.margin = "5px";
+    if (entry.preview) {
+      // Gif Preview
+      previewElement = createGifWithPreview(shuffledImages[0], entry.preview,  "300px");
 
-    imageRow.appendChild(mainImg);
+    } else {
+      // IMAGE PREVIEW
+      previewElement = document.createElement("img");
+      previewElement.src = DRIVE_THUMB_PREFIX + shuffledImages[0] + DRIVE_THUMB_SUFFIX;
+    }
+
+    previewElement.loading = "lazy";
+    previewElement.className = "main-thumbnail";
+    previewElement.style.cursor = "pointer";
+    previewElement.style.maxWidth = "300px";
+    previewElement.style.maxHeight = "300px";
+    previewElement.style.margin = "5px";
+    imageRow.appendChild(previewElement);
 
     // Hidden container for the rest of the images
     const hiddenContainer = document.createElement("div");
@@ -65,12 +70,13 @@ function renderEntries(entries) {
     imageRow.appendChild(hiddenContainer);
 
     // Toggle expand/collapse with smooth animation
-    mainImg.addEventListener("click", () => {
+    previewElement.addEventListener("click", () => {
       hiddenContainer.classList.toggle("show");
     });
 
     entryDiv.appendChild(imageRow);
     container.appendChild(entryDiv);
+
     // Add Vote button below images
     const voteButton = document.createElement("a");
     voteButton.href = PRE_FILLED_URL + "Entry+" + entry.id;
@@ -95,4 +101,26 @@ function shuffle(array) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
+}
+
+function createGifWithPreview(previewSrc, gifSrc, maxWidth = "300px") {
+  const img = document.createElement("img");
+  img.src = DRIVE_THUMB_PREFIX + previewSrc + DRIVE_THUMB_SUFFIX;
+  img.style.maxWidth = maxWidth;
+  img.style.cursor = "pointer";
+  img.style.transition = "opacity 0.3s";
+  img.style.opacity = "1";
+
+  const gif = new Image();
+  gif.src = DRIVE_THUMB_PREFIX + gifSrc + DRIVE_THUMB_SUFFIX;
+
+  gif.onload = () => {
+    img.style.opacity = "0";
+    setTimeout(() => {
+      img.src = DRIVE_THUMB_PREFIX + gifSrc + DRIVE_THUMB_SUFFIX;
+      img.style.opacity = "1";
+    }, 200);
+  };
+
+  return img;
 }

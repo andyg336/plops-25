@@ -109,6 +109,7 @@ a.vote-button:hover {
   justify-content: center;
   gap: 10px;
   opacity: 0;
+  z-index: 4;
 }
 
 /* Expanded state */

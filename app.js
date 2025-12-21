@@ -23,15 +23,19 @@ function renderEntries(entries) {
 
     const imageRow = document.createElement("div");
     imageRow.className = "images";
+    // Shuffle images per entry
+    const shuffledImages = [...entry.images];
+    shuffle(shuffledImages);
 
     // Show only the first image initially
-    const firstImageId = entry.images[0];
+    const firstImageId = shuffledImages[0];
     const mainImg = document.createElement("img");
     mainImg.src = DRIVE_THUMB_PREFIX + firstImageId + DRIVE_THUMB_SUFFIX;
     mainImg.loading = "lazy";
     mainImg.className = "main-thumbnail";
     mainImg.style.cursor = "pointer";
     mainImg.style.maxWidth = "300px";
+    mainImg.style.maxHeight = "300px";
     mainImg.style.margin = "5px";
 
     imageRow.appendChild(mainImg);
@@ -41,7 +45,7 @@ function renderEntries(entries) {
     hiddenContainer.className = "hidden-images";
 
     // Populate hidden images
-    entry.images.slice(1).forEach(id => {
+    shuffledImages.slice(1).forEach(id => {
       const link = document.createElement("a");
       link.href = DRIVE_FULL_PREFIX + id;
       link.target = "_blank";
@@ -50,7 +54,8 @@ function renderEntries(entries) {
       const img = document.createElement("img");
       img.src = DRIVE_THUMB_PREFIX + id + DRIVE_THUMB_SUFFIX;
       img.loading = "lazy";
-      img.style.maxWidth = "150px";
+      img.style.maxWidth = "300px";
+      img.style.maxHeight = "300px";
       img.style.margin = "5px";
 
       link.appendChild(img);

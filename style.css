@@ -117,6 +117,6 @@ a.vote-button:hover {
 
 /* Expanded state */
 .hidden-images.show {
-  max-height: 2000px; /* large enough to fit all images */
+  max-height: 2700px; /* large enough to fit all images */
   opacity: 1;
 }

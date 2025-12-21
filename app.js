@@ -24,27 +24,51 @@ function renderEntries(entries) {
     const imageRow = document.createElement("div");
     imageRow.className = "images";
 
-    entry.images.forEach(id => {
+    // Show only the first image initially
+    const firstImageId = entry.images[0];
+    const mainImg = document.createElement("img");
+    mainImg.src = DRIVE_THUMB_PREFIX + firstImageId + DRIVE_THUMB_SUFFIX;
+    mainImg.loading = "lazy";
+    mainImg.className = "main-thumbnail";
+    mainImg.style.cursor = "pointer";
+    mainImg.style.maxWidth = "300px";
+    mainImg.style.margin = "5px";
+
+    imageRow.appendChild(mainImg);
+
+    // Hidden container for the rest of the images
+    const hiddenContainer = document.createElement("div");
+    hiddenContainer.className = "hidden-images";
+
+    // Populate hidden images
+    entry.images.slice(1).forEach(id => {
       const link = document.createElement("a");
-      link.href = DRIVE_FULL_PREFIX + id; // full image opens in new tab
+      link.href = DRIVE_FULL_PREFIX + id;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
 
       const img = document.createElement("img");
       img.src = DRIVE_THUMB_PREFIX + id + DRIVE_THUMB_SUFFIX;
       img.loading = "lazy";
-      img.style.maxWidth = "300px"; // control display size
+      img.style.maxWidth = "150px";
       img.style.margin = "5px";
-      
+
       link.appendChild(img);
-      imageRow.appendChild(link);
+      hiddenContainer.appendChild(link);
+    });
+
+    imageRow.appendChild(hiddenContainer);
+
+    // Toggle expand/collapse with smooth animation
+    mainImg.addEventListener("click", () => {
+      hiddenContainer.classList.toggle("show");
     });
 
     entryDiv.appendChild(imageRow);
     container.appendChild(entryDiv);
     // Add Vote button below images
     const voteButton = document.createElement("a");
-    voteButton.href = PRE_FILLED_URL + entry.id;
+    voteButton.href = PRE_FILLED_URL + "Entry+" + entry.id;
     voteButton.target = "_blank";
     voteButton.rel = "noopener noreferrer";
     voteButton.textContent = "Vote!";

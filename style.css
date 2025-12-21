@@ -1,6 +1,8 @@
+/* Body & general text */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
+  background-color: #121212; /* Dark background */
+  color: #e0e0e0; /* Light text */
   margin: 0;
   padding: 20px;
 }
@@ -8,21 +10,21 @@ body {
 h1 {
   text-align: center;
   margin-bottom: 40px;
+  color: #ffffff;
 }
 
-/* Grid container for all entries */
+/* Grid container for entries */
 #entries {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
 }
 
-/* Each entry is a card */
+/* Each entry card */
 .entry {
-  background-color: #fff;
+  background-color: #121212; /* Dark card background */
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 2px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -32,10 +34,11 @@ h1 {
   margin-top: 0;
   margin-bottom: 15px;
   font-size: 1.2em;
-  color: #333;
+  color: #ffffff;
   text-align: center;
 }
 
+/* Images container */
 .images {
   display: flex;
   flex-wrap: wrap;
@@ -43,20 +46,40 @@ h1 {
   gap: 10px;
 }
 
+/* Thumbnail styling */
 .images img {
-  border: 2px solid #ccc;
-  border-radius: 8px;
+  border: 2px solid #333;
+  border-radius: 2px;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
-  max-width: 120px; /* smaller for multiple images per entry */
+  max-width: 400px;
   height: auto;
 }
 
 .images img:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 0px 20px rgb(255, 229, 172);
 }
 
+/* Vote button */
+a.vote-button {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #4caf50; /* Green button */
+  color: #fff;
+  border-radius: 2px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+a.vote-button:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+/* Responsive for small screens */
 @media (max-width: 600px) {
   .images img {
     max-width: 100px;

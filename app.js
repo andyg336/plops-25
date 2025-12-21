@@ -18,7 +18,7 @@ function renderEntries(entries) {
     entryDiv.className = "entry";
 
     const title = document.createElement("h2");
-    title.textContent = entry.id;
+    title.textContent = "Entry " + entry.id;
     entryDiv.appendChild(title);
 
     const imageRow = document.createElement("div");
@@ -35,7 +35,7 @@ function renderEntries(entries) {
       img.loading = "lazy";
       img.style.maxWidth = "300px"; // control display size
       img.style.margin = "5px";
-
+      
       link.appendChild(img);
       imageRow.appendChild(link);
     });
@@ -51,9 +51,9 @@ function renderEntries(entries) {
     voteButton.style.display = "inline-block";
     voteButton.style.marginTop = "10px";
     voteButton.style.padding = "8px 16px";
-    voteButton.style.backgroundColor = "#28a745";
+    voteButton.style.backgroundColor = "#186129ff";
     voteButton.style.color = "#fff";
-    voteButton.style.borderRadius = "6px";
+    voteButton.style.borderRadius = "2px";
     voteButton.style.textDecoration = "none";
     voteButton.style.fontWeight = "bold";
 

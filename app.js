@@ -25,7 +25,8 @@ function renderEntries(entries) {
     imageRow.className = "images";
     // Shuffle images per entry
     const shuffledImages = [...entry.images];
-    shuffle(shuffledImages);
+    // Shuffle isn't actually the best, disable for now
+    // shuffle(shuffledImages);
 
     if (entry.preview) {
       // Gif Preview

@@ -45,7 +45,7 @@ function renderEntries(entries) {
     hiddenContainer.className = "hidden-images";
 
     // Populate hidden images
-    shuffledImages.slice(1).forEach(id => {
+    shuffledImages.slice(0).forEach(id => {
       const link = document.createElement("a");
       link.href = DRIVE_FULL_PREFIX + id;
       link.target = "_blank";
@@ -54,8 +54,8 @@ function renderEntries(entries) {
       const img = document.createElement("img");
       img.src = DRIVE_THUMB_PREFIX + id + DRIVE_THUMB_SUFFIX;
       img.loading = "lazy";
-      img.style.maxWidth = "300px";
-      img.style.maxHeight = "300px";
+      img.style.maxWidth = "500px";
+      img.style.maxHeight = "500px";
       img.style.margin = "5px";
 
       link.appendChild(img);

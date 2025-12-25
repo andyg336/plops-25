@@ -1,14 +1,40 @@
 const DRIVE_THUMB_PREFIX = "https://drive.google.com/thumbnail?id=";
-const DRIVE_THUMB_SUFFIX = "&sz=w1000"; // request bigger thumbnails
+const DRIVE_THUMB_SUFFIX = "&sz=w1000";
 const DRIVE_FULL_PREFIX = "https://drive.google.com/uc?export=view&id=";
 const PRE_FILLED_URL = "https://docs.google.com/forms/d/e/1FAIpQLSebjaGAgXt849SYB6i7P3Gfr8BBVBdVhIxwUB6QPB2WeD_7OQ/viewform?usp=pp_url&entry.2005530914="
+const SHEET_URL =  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFI96vUXIohOBWhssASlKEUjj-1mDOy9sSWphIpQexZn8KoaRtlEDKq2PcDUFCK5TRuJETb5D6ZlMy/pub?output=csv";
 
-fetch("./entries.json")
-  .then(res => res.json())
-  .then(entries => {
-    shuffle(entries);
-    renderEntries(entries);
+const voteCounts = {};
+
+Promise.all([
+  fetch("./entries.json").then(res => res.json()),
+  fetch(SHEET_URL).then(res => res.text())
+]).then(([entries, csvText]) => {
+  parseResultsCSV(csvText);
+  // shuffle(entries);
+  renderEntries(entries);
+})
+.catch(err => {
+  console.error("Failed to load data:", err);
+});
+
+function parseResultsCSV(csvText) {
+  const rows = csvText.trim().split("\n").map(r => r.split(","));
+  processResults(rows);
+}
+
+function processResults(rows) {
+  const headers = rows[0];
+  const data = rows.slice(1);
+
+  data.forEach(row => {
+    if(row[0] == "Timestamp") return;
+    const entryId = row[2].replace("\r", "").replace("Entry ", "");
+    if (!entryId) return;
+
+    voteCounts[entryId] = (voteCounts[entryId] || 0) + 1;
   });
+}
 
 function renderEntries(entries) {
   const container = document.getElementById("entries");
@@ -79,21 +105,25 @@ function renderEntries(entries) {
     container.appendChild(entryDiv);
 
     // Add Vote button below images
-    const voteButton = document.createElement("a");
-    voteButton.href = PRE_FILLED_URL + "Entry+" + entry.id;
-    voteButton.target = "_blank";
-    voteButton.rel = "noopener noreferrer";
-    voteButton.textContent = "Vote!";
-    voteButton.style.display = "inline-block";
-    voteButton.style.marginTop = "10px";
-    voteButton.style.padding = "8px 16px";
-    voteButton.style.backgroundColor = "#186129ff";
-    voteButton.style.color = "#fff";
-    voteButton.style.borderRadius = "2px";
-    voteButton.style.textDecoration = "none";
-    voteButton.style.fontWeight = "bold";
+    // const voteButton = document.createElement("a");
+    // voteButton.href = PRE_FILLED_URL + "Entry+" + entry.id;
+    // voteButton.target = "_blank";
+    // voteButton.rel = "noopener noreferrer";
+    // voteButton.textContent = "Vote!";
+    // voteButton.style.display = "inline-block";
+    // voteButton.style.marginTop = "10px";
+    // voteButton.style.padding = "8px 16px";
+    // voteButton.style.backgroundColor = "#186129ff";
+    // voteButton.style.color = "#fff";
+    // voteButton.style.borderRadius = "2px";
+    // voteButton.style.textDecoration = "none";
+    // voteButton.style.fontWeight = "bold";
 
-    entryDiv.appendChild(voteButton);
+    // entryDiv.appendChild(voteButton);
+    const resultsString = document.createElement("p");
+    const voteCount = voteCounts[parseInt(entry.id)] || 0;
+    resultsString.textContent = `${getNiceName(entry.name)}, ${voteCount} Votes`;
+    entryDiv.appendChild(resultsString);
   });
 }
 
@@ -124,4 +154,9 @@ function createGifWithPreview(previewSrc, gifSrc, maxWidth = "300px") {
   };
 
   return img;
+}
+
+function getNiceName(name){
+  const niceName = name.split(/\.?(?=[A-Z])/).join(' ');
+  return niceName;
 }
